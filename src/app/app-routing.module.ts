@@ -9,6 +9,7 @@ const routes: Routes = [
         (m) => m.SocialMediaModule
       ),
   },
+  { path: '**', redirectTo: 'social-media' },
 ];
 
 @NgModule({
