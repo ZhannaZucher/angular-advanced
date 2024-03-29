@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Post } from '../../models/post.model';
 
 @Component({
@@ -8,4 +8,12 @@ import { Post } from '../../models/post.model';
 })
 export class PostListItemComponent {
   @Input() post!: Post;
+  //on remonte dans l'évent le comment et Id du post commenté au composant parent (post-list) qui est un container et se charge de la comm avec le service
+  @Output() postCommented = new EventEmitter<{
+    comment: string;
+    postId: number;
+  }>();
+  onNewComment(comment: string) {
+    this.postCommented.emit({ comment, postId: this.post.id });
+  }
 }

@@ -16,4 +16,10 @@
     />
     <p class="post-content">{{ post.content }}</p>
   </mat-card-content>
+  <mat-card-actions>
+    <app-comments
+      [comments]="post.comments"
+      (newComment)="onNewComment($event)"
+    ></app-comments>
+  </mat-card-actions>
 </mat-card>
