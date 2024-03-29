@@ -13,6 +13,10 @@ export class PostListItemComponent {
     comment: string;
     postId: number;
   }>();
+
+  //user factice pour tester le pipe UsernamePipe
+  tempUser = { firstName: 'Jeanne', lastName: 'Zucher' };
+
   onNewComment(comment: string) {
     this.postCommented.emit({ comment, postId: this.post.id });
   }
