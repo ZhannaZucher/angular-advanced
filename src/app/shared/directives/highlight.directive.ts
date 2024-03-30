@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Directive,
   ElementRef,
+  HostListener,
   Input,
   Renderer2,
 } from '@angular/core';
@@ -23,5 +24,18 @@ export class HightlightDirective implements AfterViewInit {
 
   setBackgroundColor(color: string) {
     this.renderer.setStyle(this.el.nativeElement, 'background-color', color);
+  }
+
+  //pour régir aux events de l'élément html:
+  @HostListener('mouseenter') onMouseEnter() {
+    this.setBackgroundColor('lightgreen');
+  }
+  //on revient sur la color initialisée
+  @HostListener('mouseleave') onMouseLeave() {
+    this.setBackgroundColor(this.color);
+  }
+  //si on click ça reste en vert après
+  @HostListener('click') onClick() {
+    this.color = 'lightgreen';
   }
 }
