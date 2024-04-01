@@ -3,6 +3,7 @@ import { Comment } from '../../../core/models/comment.model';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import {
   animate,
+  query,
   state,
   style,
   transition,
@@ -34,6 +35,11 @@ import {
       transition('default => active', [animate('100ms ease-in-out')]),
       transition('active => default', [animate('500ms ease-in-out')]),
       transition('void => *', [
+        query('span', [
+          style({
+            opacity: 0,
+          }),
+        ]),
         style({
           transform: 'translateX(-100%)',
           opacity: 0,
@@ -47,6 +53,14 @@ import {
             'background-color': 'white',
           })
         ),
+        query('span', [
+          animate(
+            '500ms',
+            style({
+              opacity: 1,
+            })
+          ),
+        ]),
       ]),
     ]),
   ],
