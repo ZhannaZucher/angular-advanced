@@ -12,7 +12,10 @@ import {
   style,
   transition,
   trigger,
+  useAnimation,
 } from '@angular/animations';
+import { flashAnimation } from '../../animations/flash.animation';
+import { slideAndFadeAnimation } from '../../animations/slide-and-fade.animation';
 
 @Component({
   selector: 'app-comments',
@@ -49,34 +52,19 @@ import {
             opacity: 0,
           }),
         ]),
-        style({
-          transform: 'translateX(-100%)',
-          opacity: 0,
-          'background-color': 'rgb(201, 157, 242)',
+        useAnimation(slideAndFadeAnimation, {
+          params: {
+            time: '500ms',
+            startColor: 'rgb(201, 157, 242',
+          },
         }),
-        animate(
-          '300ms ease-out',
-          style({
-            transform: 'translateX(0)',
-            opacity: 1,
-            'background-color': 'white',
-          })
-        ),
         group([
-          sequence([
-            animate(
-              '250ms',
-              style({
-                'background-color': 'rgb(201, 157, 242)',
-              })
-            ),
-            animate(
-              '250ms',
-              style({
-                'background-color': 'white',
-              })
-            ),
-          ]),
+          useAnimation(flashAnimation, {
+            params: {
+              time: '1000ms',
+              flashColor: 'rgb(249, 179, 111',
+            },
+          }),
           query('.comment-text', [
             animate(
               '250ms',
