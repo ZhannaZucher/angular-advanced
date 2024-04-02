@@ -3,7 +3,9 @@ import { Comment } from '../../../core/models/comment.model';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import {
   animate,
+  group,
   query,
+  sequence,
   state,
   style,
   transition,
@@ -35,7 +37,7 @@ import {
       transition('default => active', [animate('100ms ease-in-out')]),
       transition('active => default', [animate('500ms ease-in-out')]),
       transition('void => *', [
-        query('span', [
+        query('.comment-text, .comment-date', [
           style({
             opacity: 0,
           }),
@@ -53,13 +55,37 @@ import {
             'background-color': 'white',
           })
         ),
-        query('span', [
-          animate(
-            '500ms',
-            style({
-              opacity: 1,
-            })
-          ),
+        group([
+          // sequence([
+          //   animate(
+          //     '250ms',
+          //     style({
+          //       'background-color': 'rgb(255, 7, 147)',
+          //     })
+          //   ),
+          //   animate(
+          //     '250ms',
+          //     style({
+          //       'background-color': 'white',
+          //     })
+          //   ),
+          // ]),
+          query('.comment-text', [
+            animate(
+              '250ms',
+              style({
+                opacity: 1,
+              })
+            ),
+          ]),
+          query('.comment-date', [
+            animate(
+              '500ms',
+              style({
+                opacity: 1,
+              })
+            ),
+          ]),
         ]),
       ]),
     ]),
