@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -6,12 +6,18 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   templateUrl: './complex-form.component.html',
   styleUrl: './complex-form.component.scss',
 })
-export class ComplexFormComponent {
+export class ComplexFormComponent implements OnInit {
   mainForm!: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {}
 
+  ngOnInit(): void {
+    this.initMainForm();
+  }
+
   initMainForm(): void {
     this.mainForm = this.formBuilder.group({});
   }
+
+  onSubmitForm(): void {}
 }
