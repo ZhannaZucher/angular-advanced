@@ -3,9 +3,11 @@ import { Comment } from '../../../core/models/comment.model';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import {
   animate,
+  animateChild,
   group,
   query,
   sequence,
+  stagger,
   state,
   style,
   transition,
@@ -17,6 +19,11 @@ import {
   templateUrl: './comments.component.html',
   styleUrl: './comments.component.scss',
   animations: [
+    trigger('list', [
+      transition(':enter', [
+        query('@listItem', [stagger(50, [animateChild()])]), //on cible les élém qui ont l'animation @listItem, on dit de déclencher cette animation enfant (@listItem) avec 50 ms de décalage
+      ]),
+    ]),
     trigger('listItem', [
       state(
         'default',
@@ -56,20 +63,20 @@ import {
           })
         ),
         group([
-          // sequence([
-          //   animate(
-          //     '250ms',
-          //     style({
-          //       'background-color': 'rgb(255, 7, 147)',
-          //     })
-          //   ),
-          //   animate(
-          //     '250ms',
-          //     style({
-          //       'background-color': 'white',
-          //     })
-          //   ),
-          // ]),
+          sequence([
+            animate(
+              '250ms',
+              style({
+                'background-color': 'rgb(201, 157, 242)',
+              })
+            ),
+            animate(
+              '250ms',
+              style({
+                'background-color': 'white',
+              })
+            ),
+          ]),
           query('.comment-text', [
             animate(
               '250ms',
