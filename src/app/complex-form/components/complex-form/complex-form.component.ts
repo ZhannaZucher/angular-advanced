@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Observable, map, startWith, tap } from 'rxjs';
 import { ComplexFormService } from '../../services/complex-form.service';
+import { confirmEqualValidator } from '../../validators/confirm-equal.validator';
 
 @Component({
   selector: 'app-complex-form',
@@ -63,20 +64,30 @@ export class ComplexFormComponent implements OnInit {
     this.phoneCtrl = this.formBuilder.control('');
     this.emailCtrl = this.formBuilder.control('');
     this.confirmEmailCtrl = this.formBuilder.control('');
-    this.emailForm = this.formBuilder.group({
-      email: this.emailCtrl,
-      confirm: this.confirmEmailCtrl,
-    });
+    this.emailForm = this.formBuilder.group(
+      {
+        email: this.emailCtrl,
+        confirm: this.confirmEmailCtrl,
+      },
+      {
+        validators: [confirmEqualValidator('email', 'confirm')],
+      }
+    );
     this.passwordCtrl = this.formBuilder.control('', Validators.required);
     this.confirmPasswordCtrl = this.formBuilder.control(
       '',
       Validators.required
     );
-    this.loginInfoForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: this.passwordCtrl,
-      confirmPassword: this.confirmPasswordCtrl,
-    });
+    this.loginInfoForm = this.formBuilder.group(
+      {
+        username: ['', Validators.required],
+        password: this.passwordCtrl,
+        confirmPassword: this.confirmPasswordCtrl,
+      },
+      {
+        validators: [confirmEqualValidator('password', 'confirmPassword')],
+      }
+    );
   }
 
   //initializing observable values for email & phone input onChange input radio
