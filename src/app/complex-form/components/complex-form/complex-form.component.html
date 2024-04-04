@@ -2,22 +2,64 @@
   <mat-card-title>Inscription</mat-card-title>
   <mat-card class="form-card">
     <mat-card-subtitle>Informations personnelles </mat-card-subtitle>
+    <div class="form-row" formGroupName="personalInfo">
+      <mat-form-field appearance="fill">
+        <mat-label>Prénom</mat-label>
+        <input matInput type="text" formControlName="firstName" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Nom</mat-label>
+        <input matInput type="text" formControlName="lastName" />
+      </mat-form-field>
+    </div>
   </mat-card>
-  <mat-card class="form-card">
+  <mat-card class="form-card" [formGroup]="emailForm">
     <mat-card-subtitle
       >Comment préferez-vous être contacté(e)?</mat-card-subtitle
     >
+    <mat-radio-group [formControl]="contactPreferenceCtrl">
+      <mat-radio-button value="email">Email</mat-radio-button>
+      <mat-radio-button value="phone">Téléphone</mat-radio-button>
+    </mat-radio-group>
   </mat-card>
-  <mat-card class="form-card">
+  <mat-card class="form-card" formGroupName="email">
     <mat-card-subtitle>Email</mat-card-subtitle>
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Adresse email</mat-label>
+        <input matInput type="text" [formControl]="emailCtrl" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Confirmez votre adresse email</mat-label>
+        <input matInput type="text" [formControl]="confirmEmailCtrl" />
+      </mat-form-field>
+    </div>
   </mat-card>
   <mat-card class="form-card">
     <mat-card-subtitle>Téléphone</mat-card-subtitle>
+    <mat-form-field appearance="fill">
+      <mat-label>Numéro de téléphone</mat-label>
+      <input matInput type="text" [formControl]="phoneCtrl" />
+    </mat-form-field>
   </mat-card>
-  <mat-card class="form-card">
+  <mat-card class="form-card" [formGroup]="loginInfoForm">
     <mat-card-subtitle>Informations de connexion</mat-card-subtitle>
+    <mat-form-field appearance="fill">
+      <mat-label>Nom d'utilisateur</mat-label>
+      <input matInput type="text" formControlName="username" />
+    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Confirmez votre mot de passe</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" />
+      </mat-form-field>
+    </div>
   </mat-card>
-  <mat-card-actions **ngIf="mainForm.valid">
+  <mat-card-actions *ngIf="mainForm.valid">
     <button mat-flat-button color="primary" (click)="onSubmitForm()">
       ENREGISTRER
     </button>
