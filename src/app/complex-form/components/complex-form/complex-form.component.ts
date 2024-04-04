@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Observable, map, startWith, tap } from 'rxjs';
+import { ComplexFormService } from '../../services/complex-form.service';
 
 @Component({
   selector: 'app-complex-form',
@@ -25,10 +26,16 @@ export class ComplexFormComponent implements OnInit {
   confirmPasswordCtrl!: FormControl;
   loginInfoForm!: FormGroup;
 
+  //Observables
   showEmailCtrl$!: Observable<boolean>;
   showPhoneCtrl$!: Observable<boolean>;
 
-  constructor(private formBuilder: FormBuilder) {}
+  loading = false;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private complexFormService: ComplexFormService
+  ) {}
 
   ngOnInit(): void {
     this.initFormControls();
@@ -132,6 +139,26 @@ export class ComplexFormComponent implements OnInit {
   }
 
   onSubmitForm(): void {
-    console.log(this.mainForm.value);
+    this.loading = true;
+    this.complexFormService
+      .saveUserInfo(this.mainForm.value)
+      .pipe(
+        tap((saved) => {
+          this.loading = false;
+          //if saveUserInfo return true (=> saved === true)
+          if (saved) {
+            this.resetForm();
+          } else {
+            console.error("echec de l'enregistrement");
+          }
+        })
+      )
+      .subscribe();
+  }
+
+  private resetForm(): void {
+    //this method will also reset default value for contactPreference so we have to patch this default value:
+    this.mainForm.reset();
+    this.contactPreferenceCtrl.patchValue('email');
   }
 }

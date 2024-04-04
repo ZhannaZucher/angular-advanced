@@ -72,8 +72,18 @@
     </div>
   </mat-card>
   <mat-card-actions *ngIf="mainForm.valid">
-    <button mat-flat-button color="primary" (click)="onSubmitForm()">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmitForm()"
+      [disabled]="loading"
+    >
       ENREGISTRER
     </button>
   </mat-card-actions>
+  <mat-spinner
+    *ngIf="loading"
+    color="primary"
+    mode="indeterminate"
+  ></mat-spinner>
 </mat-card>
