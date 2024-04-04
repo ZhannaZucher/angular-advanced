@@ -10,6 +10,7 @@ mat-form-field {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 10px;
 }
 
 .form-card {
@@ -17,7 +18,7 @@ mat-form-field {
 }
 
 mat-card-subtitle {
-  line-height: 60px;
+  line-height: 40px;
   padding-left: 10px;
 }
 
@@ -27,6 +28,9 @@ mat-card-subtitle {
 
 mat-card-actions {
   text-align: center;
+  button {
+    margin: 0 auto;
+  }
 }
 
 .main-form {
