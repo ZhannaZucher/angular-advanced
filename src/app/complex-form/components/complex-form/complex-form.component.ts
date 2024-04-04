@@ -5,7 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, map, startWith, tap } from 'rxjs';
 
 @Component({
   selector: 'app-complex-form',
@@ -79,7 +79,22 @@ export class ComplexFormComponent implements OnInit {
     );
     this.showPhoneCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
       startWith(this.contactPreferenceCtrl.value), //starts with current preference input value and then reacts onChange
-      map((preference) => (preference === 'phone' ? true : false))
+      map((preference) => (preference === 'phone' ? true : false)),
+      tap((showPhoneCtrl) => {
+        if (showPhoneCtrl) {
+          //add validators
+          this.phoneCtrl.addValidators([
+            Validators.required,
+            Validators.minLength(10),
+            Validators.maxLength(10),
+          ]);
+        } else {
+          //remove validators
+          this.phoneCtrl.clearValidators();
+        }
+        //always when validators where modified/removed call this method to update input  validation rules and value
+        this.phoneCtrl.updateValueAndValidity();
+      })
     );
   }
 
