@@ -75,8 +75,22 @@ export class ComplexFormComponent implements OnInit {
   private InitFormObservables() {
     this.showEmailCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
       startWith(this.contactPreferenceCtrl.value), //starts with current preference input value and then reacts onChange
-      map((preference) => (preference === 'email' ? true : false))
+      map((preference) => (preference === 'email' ? true : false)),
+      tap((showEmailCtrl) => {
+        if (showEmailCtrl) {
+          //add validators
+          this.emailCtrl.addValidators([Validators.required, Validators.email]);
+        } else {
+          //remove validators
+          this.emailCtrl.clearValidators();
+          this.confirmEmailCtrl.clearValidators();
+        }
+        //always when validators where modified/removed call this method to update input  validation rules and value
+        this.emailCtrl.updateValueAndValidity();
+        this.confirmEmailCtrl.updateValueAndValidity();
+      })
     );
+
     this.showPhoneCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
       startWith(this.contactPreferenceCtrl.value), //starts with current preference input value and then reacts onChange
       map((preference) => (preference === 'phone' ? true : false)),
