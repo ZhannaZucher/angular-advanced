@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -87,7 +88,7 @@ export class ComplexFormComponent implements OnInit {
   }
 
   //handle validation for email inputs
-  private setEmailValidators(showEmailCtrl: boolean) {
+  private setEmailValidators(showEmailCtrl: boolean): void {
     if (showEmailCtrl) {
       this.emailCtrl.addValidators([Validators.required, Validators.email]);
       this.confirmEmailCtrl.addValidators([
@@ -103,7 +104,7 @@ export class ComplexFormComponent implements OnInit {
   }
 
   //handle validation for phone inputs
-  private setPhoneValidators(showPhoneCtrl: boolean) {
+  private setPhoneValidators(showPhoneCtrl: boolean): void {
     if (showPhoneCtrl) {
       this.phoneCtrl.addValidators([
         Validators.required,
@@ -114,6 +115,20 @@ export class ComplexFormComponent implements OnInit {
       this.phoneCtrl.clearValidators();
     }
     this.phoneCtrl.updateValueAndValidity();
+  }
+
+  getFormControlErrorText(ctrl: AbstractControl): string {
+    if (ctrl.hasError('required')) {
+      return 'Ce champ est requis';
+    } else if (ctrl.hasError('email')) {
+      return "Merci d'entrer une addresse email valide";
+    } else if (ctrl.hasError('minlength')) {
+      return 'Ce numéro de téléphone ne contient pas assez de chiffres';
+    } else if (ctrl.hasError('maxlength')) {
+      return 'Ce numéro de téléphone contient trop de chiffres';
+    } else {
+      return 'Ce champ contient une erreur';
+    }
   }
 
   onSubmitForm(): void {
