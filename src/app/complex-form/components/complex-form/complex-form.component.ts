@@ -30,6 +30,8 @@ export class ComplexFormComponent implements OnInit {
   //Observables
   showEmailCtrl$!: Observable<boolean>;
   showPhoneCtrl$!: Observable<boolean>;
+  showEmailError$!: Observable<boolean>;
+  showPasswordError$!: Observable<boolean>;
 
   loading = false;
 
@@ -71,6 +73,7 @@ export class ComplexFormComponent implements OnInit {
       },
       {
         validators: [confirmEqualValidator('email', 'confirm')],
+        updateOn: 'blur', //évaluation s'active au blur et non avant
       }
     );
     this.passwordCtrl = this.formBuilder.control('', Validators.required);
@@ -86,11 +89,12 @@ export class ComplexFormComponent implements OnInit {
       },
       {
         validators: [confirmEqualValidator('password', 'confirmPassword')],
+        updateOn: 'blur', //évaluation s'active au blur et non avant
       }
     );
   }
 
-  //initializing observable values for email & phone input onChange input radio
+  //initializing observable values for email & phone input onChange input radio AND  confirm email/password errors
   private InitFormObservables() {
     this.showEmailCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
       startWith(this.contactPreferenceCtrl.value), //starts with current preference input value and then reacts onChange
@@ -102,6 +106,23 @@ export class ComplexFormComponent implements OnInit {
       startWith(this.contactPreferenceCtrl.value), //starts with current preference input value and then reacts onChange
       map((preference) => (preference === 'phone' ? true : false)),
       tap((showPhoneCtrl) => this.setPhoneValidators(showPhoneCtrl))
+    );
+    this.showEmailError$ = this.emailForm.statusChanges.pipe(
+      map(
+        (status) =>
+          status === 'INVALID' &&
+          this.emailCtrl.value &&
+          this.confirmEmailCtrl.value
+      )
+    );
+    this.showPasswordError$ = this.loginInfoForm.statusChanges.pipe(
+      map(
+        (status) =>
+          status === 'INVALID' &&
+          this.passwordCtrl.value &&
+          this.confirmPasswordCtrl.value &&
+          this.loginInfoForm.hasError('confirmEqual')
+      )
     );
   }
 
