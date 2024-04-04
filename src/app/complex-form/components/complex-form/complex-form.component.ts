@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Observable, map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-complex-form',
@@ -23,11 +24,15 @@ export class ComplexFormComponent implements OnInit {
   confirmPasswordCtrl!: FormControl;
   loginInfoForm!: FormGroup;
 
+  showEmailCtrl$!: Observable<boolean>;
+  showPhoneCtrl$!: Observable<boolean>;
+
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.initFormControls();
     this.initMainForm();
+    this.InitFormObservables();
   }
 
   //private methods can not be called from template!
@@ -66,5 +71,19 @@ export class ComplexFormComponent implements OnInit {
     });
   }
 
-  onSubmitForm(): void {}
+  //initializing observable values for email & phone input onChange input radio
+  private InitFormObservables() {
+    this.showEmailCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
+      startWith(this.contactPreferenceCtrl.value), //starts with current preference input value and then reacts onChange
+      map((preference) => (preference === 'email' ? true : false))
+    );
+    this.showPhoneCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
+      startWith(this.contactPreferenceCtrl.value), //starts with current preference input value and then reacts onChange
+      map((preference) => (preference === 'phone' ? true : false))
+    );
+  }
+
+  onSubmitForm(): void {
+    console.log(this.mainForm.value);
+  }
 }

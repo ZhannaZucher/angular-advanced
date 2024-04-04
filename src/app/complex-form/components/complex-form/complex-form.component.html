@@ -22,7 +22,11 @@
       <mat-radio-button value="phone">Téléphone</mat-radio-button>
     </mat-radio-group>
   </mat-card>
-  <mat-card class="form-card" formGroupName="email">
+  <mat-card
+    class="form-card"
+    formGroupName="email"
+    *ngIf="showEmailCtrl$ | async"
+  >
     <mat-card-subtitle>Email</mat-card-subtitle>
     <div class="form-row">
       <mat-form-field appearance="fill">
@@ -35,7 +39,7 @@
       </mat-form-field>
     </div>
   </mat-card>
-  <mat-card class="form-card">
+  <mat-card class="form-card" *ngIf="showPhoneCtrl$ | async">
     <mat-card-subtitle>Téléphone</mat-card-subtitle>
     <mat-form-field appearance="fill">
       <mat-label>Numéro de téléphone</mat-label>
