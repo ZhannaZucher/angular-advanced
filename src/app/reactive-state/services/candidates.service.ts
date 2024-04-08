@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, delay, tap } from 'rxjs';
 import { Candidate } from '../models/candidate.model';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable()
 export class CandidatesService {
@@ -25,5 +26,21 @@ export class CandidatesService {
   //Appeler  next  sur l'un des BehaviorSubjects du service, c'est s'assurer que tous les components qui sont souscrits à leurs Observables recevront cette nouvelle donnée.
   private setLoadingStatus(loading: boolean) {
     this._loading$.next(loading);
+  }
+
+  //la requête va hydrater le tableau candidates$
+  getCandidatesFromServer() {
+    this.setLoadingStatus(true);
+    //ici on ne souscrit pas à un Observable car le component est déjà souscrit avec la méthode get candidates$()
+    this.http
+      .get<Candidate[]>(`${environment.apiUrl}/candidates`)
+      .pipe(
+        delay(1000), //on simule le temps de réponse du server pour le loader
+        tap((candidates) => {
+          this._candidates$.next(candidates);
+          this.setLoadingStatus(false);
+        })
+      )
+      .subscribe();
   }
 }
