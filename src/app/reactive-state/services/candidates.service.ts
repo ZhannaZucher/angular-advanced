@@ -23,6 +23,8 @@ export class CandidatesService {
     return this._candidates$.asObservable();
   }
 
+  private lastLoad = 0;
+
   //Appeler  next  sur l'un des BehaviorSubjects du service, c'est s'assurer que tous les components qui sont souscrits à leurs Observables recevront cette nouvelle donnée.
   private setLoadingStatus(loading: boolean) {
     this._loading$.next(loading);
@@ -30,6 +32,10 @@ export class CandidatesService {
 
   //la requête va hydrater le tableau candidates$
   getCandidatesFromServer() {
+    //si le dernier fetch de data date de moins de 5 min on ne fait rien
+    if (Date.now() - this.lastLoad <= 300000) {
+      return;
+    }
     this.setLoadingStatus(true);
     //ici on ne souscrit pas à un Observable car le component est déjà souscrit avec la méthode get candidates$()
     this.http
@@ -37,6 +43,7 @@ export class CandidatesService {
       .pipe(
         delay(1000), //on simule le temps de réponse du server pour le loader
         tap((candidates) => {
+          this.lastLoad = Date.now();
           this._candidates$.next(candidates);
           this.setLoadingStatus(false);
         })
