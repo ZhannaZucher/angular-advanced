@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest, map, startWith } from 'rxjs';
 import { CandidatesService } from '../../services/candidates.service';
 import { Candidate } from '../../models/candidate.model';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -35,11 +35,6 @@ export class CandidateListComponent implements OnInit {
     this.candidatesService.getCandidatesFromServer();
   }
 
-  private initObservables() {
-    this.loading$ = this.candidatesService.loading$;
-    this.candidates$ = this.candidatesService.candidates$;
-  }
-
   private initForm() {
     this.searchCtrl = this.formBuilder.control('');
     this.searchTypeCtrl = this.formBuilder.control(
@@ -47,8 +42,33 @@ export class CandidateListComponent implements OnInit {
     );
     this.searchTypeOptions = [
       { value: CandidateSearchType.FIRSTNAME, label: 'Prénom' },
-      { value: CandidateSearchType.FIRSTNAME, label: 'Nom' },
+      { value: CandidateSearchType.LASTNAME, label: 'Nom' },
       { value: CandidateSearchType.COMPANY, label: 'Entreprise' },
     ];
+  }
+
+  private initObservables() {
+    this.loading$ = this.candidatesService.loading$;
+    const search$ = this.searchCtrl.valueChanges.pipe(
+      startWith(this.searchCtrl.value),
+      map((value) => value.toLowerCase())
+    );
+    const searchType$: Observable<CandidateSearchType> =
+      this.searchTypeCtrl.valueChanges.pipe(
+        startWith(this.searchTypeCtrl.value)
+      );
+    //on combine plsrs observables ensemble:
+    //combineLatest émet sous forme de tableau à chaque fois que un des 3 observables émet qch il émet les dernières émissions des 3 observables
+    this.candidates$ = combineLatest([
+      search$,
+      searchType$,
+      this.candidatesService.candidates$,
+    ]).pipe(
+      map(([search, searchType, candidates]) =>
+        candidates.filter((candidate) =>
+          candidate[searchType].toLowerCase().includes(search as string)
+        )
+      )
+    );
   }
 }
